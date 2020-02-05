@@ -23,8 +23,9 @@ Materails for industry introduction to statistics workshop.
 
 ## Interactive Tutorials in R
 
-- Interative introduction to R [here](https://davidjpos.shinyapps.io/section_1/).
-- Interative introduction to the tidyverse [here](https://davidjpos.shinyapps.io/section_2/).
+- Interactive introduction to R [here]( https://davidjpos.shinyapps.io/section_1_basics_of_r/).
+- Interactive introduction to the tidyverse [here](https://davidjpos.shinyapps.io/section_2_basics_of_tidyverse/).
+- Interactive introduction to data cleaning [here](https://davidjpos.shinyapps.io/section_3_credit_default/).
 
 ## Slides
 
