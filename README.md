@@ -20,6 +20,7 @@ Materails for industry introduction to statistics workshop.
 - You can download R from [here](https://www.r-project.org/).
 - RStudios is a powerful IDE for R [here](https://rstudio.com/products/rstudio/download/).
 - ggplot function references [here](https://ggplot2.tidyverse.org/reference/).
+- An extensive introduction to ggplot2 [here](http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html).
 
 ## Interactive Tutorials in R
 
