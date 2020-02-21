@@ -7,6 +7,7 @@ Materails for industry introduction to statistics workshop.
 
 ## Books
 
+- Free online cook book for getting started with R [here](https://rstudio-education.github.io/tidyverse-cookbook/).
 - Free online version of R for Data Science by Garrett Grolemund and Hadley Wickham [here](https://r4ds.had.co.nz/).
 - Free online version of Text Mining with R by Julia Silge and David Robinson [here](https://www.tidytextmining.com/).
 - Free online version of R Cookbook by James (JD) Long and Paul Teetor [here](https://rc2e.com/).
