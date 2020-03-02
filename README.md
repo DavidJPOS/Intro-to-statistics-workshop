@@ -3,13 +3,13 @@ Materails for industry introduction to statistics workshop.
 
 <!--- ## Papers --->
 
-<!-- - An Introduction to ROC Analysis [here](http://people.inf.elte.hu/kiss/11dwhdm/roc.pdf). --->
+<!--- - An Introduction to ROC Analysis [here](http://people.inf.elte.hu/kiss/11dwhdm/roc.pdf). --->
 
 ## Interactive Tutorials in R
 
 - Interactive introduction to R [here]( https://davidjpos.shinyapps.io/section_1_basics_of_r/).
 - Interactive introduction to the tidyverse [here](https://davidjpos.shinyapps.io/section_2_basics_of_tidyverse/).
-- Interactive introduction to data cleaning [here](https://davidjpos.shinyapps.io/section_3_credit_default/).
+<!--- - Interactive introduction to data cleaning [here](https://davidjpos.shinyapps.io/section_3_credit_default/). --->
 
 ## Tutorials and useful links for R
 
