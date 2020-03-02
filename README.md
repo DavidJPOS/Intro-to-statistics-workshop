@@ -1,9 +1,9 @@
 # Intro-to-statistics-workshop
 Materails for industry introduction to statistics workshop.
 
-<!--- ## Papers
+<!--- ## Papers --->
 
-<!-- - An Introduction to ROC Analysis [here](http://people.inf.elte.hu/kiss/11dwhdm/roc.pdf). 
+<!-- - An Introduction to ROC Analysis [here](http://people.inf.elte.hu/kiss/11dwhdm/roc.pdf). --->
 
 ## Interactive Tutorials in R
 
@@ -29,9 +29,9 @@ Materails for industry introduction to statistics workshop.
 - Free version of Computer Age Statistical Inference by Trevor Hastie and Bradley Efron [here](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=2ahUKEwiG2rbKiYjmAhWoQkEAHXm-CPEQFjACegQIBBAC&url=https%3A%2F%2Fweb.stanford.edu%2F~hastie%2FCASI_files%2FPDF%2Fcasi.pdf&usg=AOvVaw35RkePmQDVbV9mFQfiCn73).
 <!--- - Old version of Networks by Mark Newman [here]() --->
 
-<!--- ## Slides
+<!--- ## Slides --->
 
-<!--- - The slide deck is in the main folder.
+<!--- - The slide deck is in the main folder. --->
 
-<!--- ## Other useful links
+<!--- ## Other useful links --->
 
