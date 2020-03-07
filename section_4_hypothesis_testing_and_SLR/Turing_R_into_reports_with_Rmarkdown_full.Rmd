@@ -1,0 +1,149 @@
+---
+title: "Turning your R scripts into reports"
+author: "David JPO'Sullivan"
+date: "2/25/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+## << ------------------------------------------- >> ##
+## Usually, it is good pratice to keep your all the set up for R to one 
+## chunk at the top. Things like setting gobal parameters, loading packages, etc.
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# what packages are we using
+library(knitr)
+library(tidyverse)
+library(broom)
+library(cowplot)
+
+theme_set(theme_cowplot())
+
+### readin the data
+
+credit_hyo_df <- read_csv(file = './data/credit_hyp.csv')
+
+# clean the data: 
+credit_hyo_df <- credit_hyo_df %>% mutate(default = factor(default, levels = c(0, 1), labels = c('not-default', 'default')))
+
+credit_slr_df <- read_csv(file = './data/credit_slr_train.csv')
+credit_slr_test_df <- read_csv(file = './data/credit_slr_test.csv')
+credit_slr_test_f_df <- read_csv(file = './data/credit_slr_test_full.csv')
+
+```
+
+## What is R Markdown?
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown, see the following websites [here](http://rmarkdown.rstudio.com) and [here](https://rmarkdown.rstudio.com/articles_intro.html). R Markdown is a powerful tool for automating your report creation process. When you click the **Knit** button, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this. 
+
+```{r credit_df, echo = TRUE}
+# Peek at the data
+glimpse(credit_slr_df)
+```
+
+These chunks run segments of code from the analysis. They can be printed in the resulting document or not, but the information they produce is still available for analysis. In the following section we are going to turn the R script that we used to perform the hypothesis tests and estimation of the linear regression model into an automatically generated report. 
+
+\newpage
+# Credit modelling
+
+## Hypothesis testing on credit data
+### Difference in population means
+
+We are interested in the difference between population means of `total_bill_amt` for those who _defaulted_ and those who do not. To answer this question, we use a 5% level of significance ($\alpha = 0.05$). 
+
+The null and alternative hypotheses for the t-test are
+
+* $H_0:$ There is no difference between the population means ($\mu_1 = \mu_2$).
+* $H_A:$ There is a difference between the population means ($\mu_1 \ne \mu_2$).
+
+```{r data-pop-test,include = FALSE}
+# create the t_test_results varaible
+t_test_results <- t.test(credit_hyo_df$total_bill_amt ~ credit_hyo_df$default)
+p_val <- t_test_results$p.value
+ci_l <- t_test_results$conf.int[1]
+ci_u <- t_test_results$conf.int[2]
+```
+
+The resulting $p$-value from the t-test is $`r round(p_val,2)`$, which is less than $\alpha = 0.05$. Therefore, we reject the null hypothesis. It appears that the population means for the default and non-default groups differ. 
+
+Additionally, we can examine the confidence interval for the difference between the two population means, which is given by $[`r round(ci_l,0)`, `r round(ci_u,0)`]$. Therefore, we are 95% confident that the non-default group owes, on average, between $`r round(ci_l,0)`$ and $`r round(ci_u,0)`$ more than the default group.
+
+### Paired sample t-test
+
+We are interested in whether or not there is a difference in the mean amount owed in `bill_amt1` and `bill_amt2`.These two amounts come as a pair for each individual in the dataset which is why a paired t-test is required. As before we will use a 5% level of significance ($\alpha = 0.05$). 
+
+The null and alternative hypotheses for the paired sample t-test are
+
+* $H_0:$ The mean difference is zero ($\mu_d = 0$).
+* $H_A:$ The mean difference is not zero ($\mu_d \ne 0$).
+
+```{r data-paired-test,include = FALSE}
+# create the t_test_results varaible
+t_paired_results <- t.test(credit_hyo_df$bill_amt1, credit_hyo_df$bill_amt2, paired = TRUE)
+p_val_paired <- t_paired_results$p.value
+ci_l_paired <- t_paired_results$conf.int[1]
+ci_u_paired <- t_paired_results$conf.int[2]
+```
+
+The resulting $p$-value from the t-test is $`r round(p_val_paired,2)`$, which is less than $\alpha = 0.05$. Thus, we reject the null hypothesis, and conclude that there appears to be a difference in the amount owed for the two months (`bill_amt1` and `bill_amt2`). 
+
+Additionally, we can examine the confidence interval for the mean difference, and this is given by $[`r round(ci_l_paired,0)`, `r round(ci_u_paired,0)`]$. Therefore, we are 95% confident that a person, on average, owes between $`r round(ci_l_paired,0)`$ and $`r round(ci_u_paired,0)`$ more in `bill_amt1` than `bill_amt2`. 
+
+## Modelling customer spending behaviour between months
+
+We have just discovered that there is a difference between `bill_amt1` and `bill_amt2`. We will now investigate how well we can predict `bill_amt1` using `bill_amt2`. Pearson's correlation coefficient for these two variables is `r round(cor(credit_slr_df$bill_amt1, credit_slr_df$bill_amt2),3)`, which indicates that there is a very strong linear relationship between the variables. To confirm this, we visually inspect a scatter plot of the two variables. From the following graph, we can see that there is indeed a linear trend.
+
+```{r slr-scatter, echo=FALSE, fig.height=3, fig.width=4, fig.cap='Scatter plot of `bill_amt1` and `bill_amt2`', fig.pos='h'}
+ggplot(credit_slr_df, aes(x = bill_amt2, y = bill_amt1)) +
+  geom_point() +
+  geom_smooth() # add a trend line
+
+# fit the linear model to the data
+credit_lm <- lm(formula = bill_amt1 ~ bill_amt2, data = credit_slr_df)
+coef <- coefficients(credit_lm)
+conf_int <- confint(credit_lm)
+R2 <- summary(credit_lm)$r.squared
+```
+
+The line of best fit is estimated as: 
+
+$$ y = `r round(coef[1],2)` + `r round(coef[2],2)`\times x $$
+
+We are 95\% confident that the true slope ($b_1$) is in the range (`r round(conf_int[2,1], 2)`, `r round(conf_int[2,2], 2)`). The confidence interval does not contain zero, so there is a statistically significant __linear__ relationship between this and last month's bill. In particular, examining the value of the slope, for a one-unit increase in `bill_amt2` we expect `bill_amt1` to increase by `r round(coef[2],2)` units, on average.
+
+In terms of model fit, we have that the coefficient of determination is $R^2 = `r round(R2,2)`$. In other words, `r round(R2*100,0)`% of the variability in `bill_amt1` is explained by `bill_amt2` which is an excellent fit.
+
+\newpage
+### Model diagnostics
+
+Here we will assess the model adequacy using the following diagnostic plots of residuals which highlight departures from normality, any particularly large residuals, and cases with high leverage.
+
+```{r slr-diag, echo=FALSE, fig.height=5, fig.width=5, fig.cap='Diagnostic plot for regression.`', fig.pos='h'}
+par(mfrow = c(2,2))
+plot(credit_lm)
+par(mfrow = c(1,1))
+```
+
+There is some evidence of departures from normality in the tails of the Q-Q plot. We also have evidence of a point of high leverage (sample number 119), and it might be worth investigating what is different about that particular person. 
+ 
+It seems that this is a reasonable model for predicting `bill_amt1` using `bill_amt2`.
+
+## Accuracy of predictions
+
+We will visually assess the accuracy of the linear regression model when using it to predict spending behaviour on unseen test data.
+
+```{r pred-lm-acc, echo=FALSE, fig.height=3.5, fig.width=4.5, fig.cap='Scatter plot to assess accuracy of predictions.', fig.pos='h'}
+credit_slr_test_f_df$pred_bill_amt1 <- predict(credit_lm, newdata = credit_slr_test_df)
+
+# we can also visually inspect the old fit on the new data
+ggplot(credit_slr_test_f_df, aes(x = bill_amt2, y = bill_amt1)) +
+  geom_point() +
+  geom_point(data = credit_slr_df, 
+             aes(x = bill_amt2, bill_amt1), color = 'red', alpha = 0.5, shape = 1) + 
+  geom_line(data = augment(credit_lm), aes(y = .fitted),
+            size = 2, color = 'red', linetype = 2)
+```
+
+It looks like there still is a linear trend in the data but shifted. What could be the cause of this? Model drift: there maybe some unforseen factor at play (like seasonal effects) resulting in different amounts spent at different times of year. For example, you expect people, on average, to spend more during Christmas than at other times of the year and our linear regression model does not account for such temporal features.
