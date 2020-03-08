@@ -7,7 +7,7 @@ Materails for industry introduction to statistics workshop.
 
 ## Slides
 
-- The slide deck is in the main folder.
+- The slide deck is in the main folder or can be downloaded from [here](https://github.com/DavidJPOS/Intro-to-statistics-workshop/blob/master/IntroToStatistics_Slides.pdf).
 
 ## Interactive Tutorials in R
 
