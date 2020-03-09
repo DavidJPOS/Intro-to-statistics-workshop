@@ -2,7 +2,7 @@
 title: "Turning your R scripts into reports"
 author: "Dr David JPO'Sullivan, Dr Kevin Burke  & Dr Norma Bargary"
 date: "25/5/2020"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
