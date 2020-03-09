@@ -2,7 +2,7 @@
 ## Project: Workshop
 ## Script purpose: SLR for credit data
 ## Date: 24-2-2020
-## Author: David JPO'Sullivan
+## Author: David JPO'Sullivan, Kevin Burke & Norma Bargary
 ##################################################
 
 rm(list = ls()) # tidy work space
