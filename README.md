@@ -13,7 +13,7 @@ Materails for industry introduction to statistics workshop.
 
 - __Section 1:__ Interactive introduction to R [here]( https://davidjpos.shinyapps.io/section_1_basics_of_r/).
 - __Section 2:__ Interactive introduction to the tidyverse [here](https://davidjpos.shinyapps.io/section_2_basics_of_tidyverse/).
-  - __Section 1 and 2 recap:__ R code lives here [here]()
+  - __Section 1 and 2 recap:__ R code lives here [here](https://github.com/DavidJPOS/Intro-to-statistics-workshop/tree/master/section_1_and_2_recap)
 
 - __Section 3:__ Interactive introduction to data cleaning [here](https://davidjpos.shinyapps.io/section_3_credit_default/).
 - __Section 4:__ Files for hypothesis testing and simple linear regression [here](https://github.com/DavidJPOS/Intro-to-statistics-workshop/tree/master/section_4_hypothesis_testing_and_SLR).
