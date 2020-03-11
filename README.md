@@ -17,7 +17,8 @@ Materails for industry introduction to statistics workshop.
 
 - __Section 3:__ Interactive introduction to data cleaning [here](https://davidjpos.shinyapps.io/section_3_credit_default/).
 - __Section 4:__ Files for hypothesis testing and simple linear regression [here](https://github.com/DavidJPOS/Intro-to-statistics-workshop/tree/master/section_4_hypothesis_testing_and_SLR).
-- __Example Dashboard:__ Turning R code into an interactive dashboard [here]( https://davidjpos.shinyapps.io/dashboard/).
+- __Section 5:__ Dashboard [here](https://github.com/DavidJPOS/Intro-to-statistics-workshop/tree/master/section_5_dashboards).
+  - __Example Dashboard:__ Turning R code into an interactive dashboard [here]( https://davidjpos.shinyapps.io/dashboard/).
 
 ## Tutorials and useful links for R
 
