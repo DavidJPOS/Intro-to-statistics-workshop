@@ -1,0 +1,10 @@
+name: dashboard
+title:
+username:
+account: davidjpos
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1895773
+bundleId: 2849987
+url: https://davidjpos.shinyapps.io/dashboard/
+when: 1583319963.74881

@@ -1,0 +1,161 @@
+---
+title: "Credit default dashbaord"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+runtime: html
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(broom)
+library(knitr)
+library(tidyverse)
+
+# read in all required data sets
+credit_slr_df <- read_csv(file = './data/credit_slr_train.csv')
+credit_slr_test_df <- read_csv(file = './data/credit_slr_test.csv')
+credit_slr_test_f_df <- read_csv(file = './data/credit_slr_test_full.csv')
+
+# fit the linear model to the data
+credit_lm <- lm(formula = bill_amt1 ~ bill_amt2, data = credit_slr_df)
+
+coef <- coefficients(credit_lm)
+conf_int <- confint(credit_lm)
+R2 <- summary(credit_lm)$r.squared
+
+# for model diagnostics
+model_df <- augment(credit_lm)
+```
+
+
+Simple linear regression model prediction
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Slope confidence interval {.value-box}
+
+```{r}
+# to display confidence interval nice create a string
+conf_int_string <- paste0("95% CI: [",round(conf_int[2,1],2),', ',round(conf_int[2,2],2),']')
+# dose this CI contain 0? 
+CI_contain_zero <- conf_int[2,1] < 0 & conf_int[2,2] > 0
+
+slope_caption <- if(CI_contain_zero) "No significant slope" else "Significant slope"
+
+valueBox(
+    value = conf_int_string,
+    icon = 'fa-arrows-alt-h',
+    caption = slope_caption,
+    color = if (CI_contain_zero == TRUE) "warning" else "primary"
+  )
+
+```
+
+### $R^2$ value {.value-box}
+
+```{r}
+
+gauge(round(R2*100), min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(80, 100), warning = c(40, 79), danger = c(0, 39))
+      )
+
+```
+
+
+### Train users {.value-box}
+
+```{r}
+
+valueBox(value = nrow(credit_slr_df),
+         caption = 'Number of customer in training dataset', 
+         icon = "fa-users")
+
+```
+
+
+### Test users {.value-box}
+
+```{r}
+
+valueBox(value = nrow(credit_slr_test_f_df),
+         caption = 'Number of customer in test dataset', 
+         icon = "fa-user-friends")
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Linear regression model fit {data-width=700}
+
+```{r}
+credit_slr_test_f_df$pred_bill_amt1 <- predict(credit_lm, newdata = credit_slr_test_df)
+
+# we can also visually inspect the old fit on the new data
+ggplot(credit_slr_test_f_df, aes(x = bill_amt2, y = bill_amt1)) +
+  geom_point() +
+  geom_point(data = credit_slr_df, 
+             aes(x = bill_amt2, bill_amt1), color = 'red', alpha = 0.5, shape = 1) + 
+  geom_line(data = augment(credit_lm), aes(y = .fitted),
+            size = 2, color = 'red', linetype = 2) +
+  xlab('Bill amount 2') +
+  ylab('Bill amount 1')
+```
+
+### Table of predicted vs actual values {data-width=340}
+
+```{r}
+credit_slr_test_f_df %>% kable()
+```
+
+
+Model diagnostics
+=======================================================================
+
+Column {.tabset}
+-------------------------------------
+   
+### Chart 1
+
+```{r}
+ggplot(model_df, aes(x=.resid)) + 
+  geom_histogram(fill="steelblue", colour="black") +
+  xlab("Residuals") + theme_bw()
+
+```   
+ 
+### Chart 2
+    
+```{r}
+
+ggplot(model_df, aes(sample=.resid)) + 
+  geom_qq() + 
+  geom_qq_line()+ theme_bw()
+```
+
+### Chart 3
+
+```{r}
+ggplot(model_df, aes(x=.fitted, y=.resid)) + 
+  geom_point() +
+  xlab("Fitted") + ylab("Residuals") + 
+  geom_hline(yintercept = 0) + theme_bw()
+
+```   
+
+### Chart 4
+
+```{r}
+
+model_df %>% arrange() %>% 
+  ggplot(., aes(x=1:nrow(model_df), y=.resid)) + 
+  geom_line() + 
+  xlab("Order") + ylab("Residuals") + 
+  geom_hline(yintercept=0, lty=2) + theme_bw()
+
+
+```   
